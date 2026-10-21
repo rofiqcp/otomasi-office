@@ -1,6 +1,6 @@
 {
   "name": "@otomasi/office",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Secure live Microsoft Word, Excel and PowerPoint agent for ChatGPT and Claude MCP",
   "private": false,
   "license": "MIT",
