@@ -1,0 +1,36 @@
+{
+  "name": "@otomasi/office",
+  "version": "0.1.4",
+  "description": "Secure live Microsoft Word, Excel and PowerPoint agent for ChatGPT and Claude MCP",
+  "private": false,
+  "license": "MIT",
+  "bin": {
+    "otomasi-office": "bin/office.cjs"
+  },
+  "files": [
+    "bin",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "test": "node --check bin/office.cjs && node --check bin/browser-pair.cjs && node bin/office.cjs --help && node bin/office.cjs --version"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rofiqcp/otomasi-office.git"
+  },
+  "homepage": "https://github.com/rofiqcp/otomasi-office",
+  "bugs": {
+    "url": "https://github.com/rofiqcp/otomasi-office/issues"
+  }
+}

@@ -1,0 +1,43 @@
+name: Publish @otomasi/office to npm
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+  id-token: write
+concurrency:
+  group: npm-publish-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.repository == 'rofiqcp/otomasi-office'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+      - name: Install reproducible dependencies
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate package
+        run: |
+          npm test
+          npm pack --dry-run
+      - name: Verify tagged version
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PKG_NAME="$(node -p 'require("./package.json").name')"
+          PKG_VERSION="$(node -p 'require("./package.json").version')"
+          [ "$PKG_NAME" = '@otomasi/office' ] || { echo 'Wrong package name'; exit 1; }
+          [ "$RELEASE_TAG" = "v$PKG_VERSION" ] || { echo "Tag must equal v$PKG_VERSION"; exit 1; }
+          if npm view "$PKG_NAME@$PKG_VERSION" version --json >/dev/null 2>&1; then
+            echo "Version $PKG_VERSION already exists on npm. Bump package.json before tagging."
+            exit 1
+          fi
+      - name: Publish via npm Trusted Publishing (OIDC)
+        run: npm publish --access public
